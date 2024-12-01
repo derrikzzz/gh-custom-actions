@@ -1,5 +1,6 @@
 name: 'Deploy to AWS S3'
-description: 'Deploy the website to an AWS S3 bucket'
+description: 'Deploy the static website via AWS S3'
+
 
 inputs:
   bucket:
@@ -13,13 +14,14 @@ inputs:
   dist-folder: #path to the folder that contains the files that should be uplaoded to bucket
     description: 'The folder containing the deployable file'
     required: true
-
+  
   outputs:
     website-url: 
       description: 'The URL of the deployed website'
-
+#the syntax is the same for docker and javascript actions (in the context of the action.yml file and registering inputs and outputs)
+# the difference is in how we access those inputs in the code executed in container and how we set outputs
 
 runs:
-  using: 'node16' # tells github that this is a js custom action, using node runtime
-  main: 'main.js'
-  # might need to perform pre and post steps to deploy the website (setup and cleanup)
+  using: 'docker' #tells github that this is a docker action
+  image: 'Dockerfile' #path to dockerfile that defines the container (public image or custom image)
+

@@ -1,0 +1,8 @@
+boto3==1.24.71
+botocore==1.27.71
+
+
+
+
+
+# copy requirements file into container, and this specifices some packages to be installed in the environment for the python code to run

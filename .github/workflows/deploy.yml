@@ -10,8 +10,11 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Load and Cache dependencies
+        id: cache-deps
         uses: ./.github/actions/cached-deps
         #path starts at the root level of project
+      - name: Output information
+        run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
       - name: Lint code
         run: npm run lint
   test:
@@ -60,6 +63,9 @@ jobs:
           name: dist-files
           path: dist
   deploy:
+    permissions:
+      id-token: write
+      contents: read
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -72,5 +78,39 @@ jobs:
           path: ./dist
       - name: Output contents
         run: ls
+      - name: Get AWS permissions
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/role-name #dummy role
+          aws-region: us-east-1
+          
       - name: Deploy site
-        run: echo "Deploying..."
+        id: deploy
+        uses: ./github/actions/deploy-s3-javascript
+        env: 
+          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with: #provide input values, the values for bucket and dist-folder are required
+        #need to generate access key ID and secret access key in AWS IAM to authenticate command to AWS
+        #these keys here would grant us unlimited access, a bit more access that we want to grant
+
+        
+          bucket: gha-custom-action-hosting
+          dist-folder: ./dist
+      - name: Output information
+        run:
+          echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
+
+  # information:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Get code
+  #       uses: actions/checkout@v3
+  #     - name: Run custom action
+  #       uses: ./.github/actions/deploy-s3-javascript #local action stored in repository, need to check out code first
+  #       # need to check out code before using a custom action stored in repository
+
+#OpenID connect (OIDC) to dynamically get permission for exactly what we need to do from AWS
+
+#trust policy; restrict for which kind fo repositories this role can be assumed to have more control over when those AWS permissions can be assumed
+#no longer need any AWS access keys as secrets, dynamically request access attached to AWS specific role...
