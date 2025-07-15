@@ -16,7 +16,7 @@ def deploy_s3_docker():
             s3_client.upload_file(os.path.join(root, file), bucket, file)
             
     website_url = f'https://{bucket}.s3-website-{bucket_region}.amazonaws.com'
-    printf(f'::set-output name=website_url::{website_url}')
+    print(f'::set-output name=website_url::{website_url}')
     # set output command to set website url output of action to this dynamic value
     
 if __name__ == '__main__':
