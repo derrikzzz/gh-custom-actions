@@ -56,3 +56,87 @@ Purpose: Defines a Docker-based custom Github Action for deploying a static webs
 
 ### 4. **`workflows/deploy.yml`**
 Purpose: Github Actions workflow that orchestrates the CI/CD pipeline for the project, including linting, testing, building and deploying the site to AWS S3
+
+## npm run test - Command Breakdown Overview
+When you run `npm run test`, you're executing the Vitest testing framework to run all tests in your React application and generate a JSON report of the results
+
+## Command Flow
+
+### 1. Package.json Script Execution
+```json
+"scripts": {
+  "test": "vitest run"
+}
+```
+- npm looks up the `test` script in `package.json`
+- Executes `vitest run` command
+
+### 2. Vitest Configuration Loading
+Vitest reads configuration from `vite.config.js`:
+```javascript
+test: {
+  globals: true,              // Makes testing globals available
+  environment: 'jsdom',       // Simulates browser environment
+  setupFiles: './src/test/setup.js',  // Runs setup before tests
+  reporters: ['json'],        // Output format
+  outputFile: 'test.json'     // Where to save results
+}
+```
+
+### 3. Test Environment Setup
+- **JSDOM Environment**: Creates a virtual DOM environment for React component testing
+- **Setup File**: Runs `src/test/setup.js` which imports `@testing-library/jest-dom` for additional matchers
+- **Global Configuration**: Makes Vitest globals (`describe`, `it`, `expect`) available without imports
+
+### 4. Test Discovery
+Vitest automatically finds and runs test files matching these patterns:
+- `**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
+- `**/test/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
+
+**Found Test File**: `src/components/MainContent.test.jsx`
+
+### 5. Component Under Test: MainContent
+The component being tested has this behavior:
+```javascript
+function MainContent() {
+  const [helpVisible, setHelpVisible] = useState(false);
+  
+  function toggleHelp() {
+    setHelpVisible((isVisible) => !isVisible);
+  }
+  
+  return (
+    <main>
+      <button onClick={toggleHelp}>{helpVisible ? 'Hide' : 'Show'} Help</button>
+      {helpVisible && <HelpArea />}
+    </main>
+  );
+}
+```
+
+### 7. Test Result generation
+After running all tests, Vitest generates a JSON report which will be saved to test.json
+
+### 8. Testing Libraries Used
+
+**@testing-library/react**: Provides utilities for testing React components
+- `render()`: Renders components for testing
+- `screen`: Queries for elements in the virtual DOM
+
+**@testing-library/user-event**: Simulates user interactions
+- `userEvent.click()`: Simulates mouse clicks
+
+**@testing-library/jest-dom**: Provides additional matchers
+- `toBeInTheDocument()`: Checks if element exists in DOM
+
+## Integration with GitHub Actions
+The generated `test.json` is used in the GitHub workflow:
+- Uploaded as an artifact if tests fail
+- Provides detailed failure information for debugging
+- Enables automated testing in CI/CD pipeline
+
+## Running Tests
+```bash
+npm run test          # Run all tests once
+npm run test:watch    # Run tests in watch mode (if configured)
+npm run test:coverage # Run with coverage report (if configured)
