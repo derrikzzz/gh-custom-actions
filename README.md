@@ -140,3 +140,5 @@ The generated `test.json` is used in the GitHub workflow:
 npm run test          # Run all tests once
 npm run test:watch    # Run tests in watch mode (if configured)
 npm run test:coverage # Run with coverage report (if configured)
+```
+You can run cat test.json to view contents of passed/pending/failed test suites.
