@@ -1,5 +1,5 @@
 
-# Github Actions CI/CD Pipelin Documentation
+# Github Actions CI/CD Pipeline Documentation
 
 A brief description of what this project does and who it's for
 
