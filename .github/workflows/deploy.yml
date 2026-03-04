@@ -85,7 +85,8 @@ jobs:
           aws-region: us-east-1
 
       - name: Debug AWS identity
-        run: aws sts get-caller-identity
+        run: |
+          aws sts get-caller-identity
           aws s3 ls s3://gha-custom-action-hosting --region us-east-1
 
       - name: Deploy site
