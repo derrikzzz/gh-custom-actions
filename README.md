@@ -2,8 +2,6 @@
 
 ![Deploy](https://github.com/derrikzzz/gh-custom-actions/actions/workflows/deploy.yml/badge.svg)
 
-A brief description of what this project does and who it's for
-
 This repository uses Github Actions for automated linting, testing, building and deployment
 
 ```
