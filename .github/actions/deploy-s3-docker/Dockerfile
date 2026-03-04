@@ -1,4 +1,4 @@
-From python:3
+FROM python:3.12
 #creates an environment, create container based on python based image (python version 3)
 COPY requirements.txt /requirements.txt
 
