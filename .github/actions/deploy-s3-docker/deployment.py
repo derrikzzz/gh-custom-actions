@@ -15,7 +15,7 @@ def deploy_s3_docker():
         for file in files:
             s3_client.upload_file(os.path.join(root, file), bucket, file)
             
-    website_url = f'https://{bucket}.s3-website-{bucket_region}.amazonaws.com'
+    website_url = f'http://{bucket}.s3-website-{bucket_region}.amazonaws.com'
     with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
         f.write(f'website-url={website_url}\n')
     # set output using the current GITHUB_OUTPUT env file (::set-output is deprecated)
