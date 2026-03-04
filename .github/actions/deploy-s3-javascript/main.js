@@ -24,7 +24,7 @@ function run() {
   core.notice("Deploying to S3"); //log a message to github actions workflow log
 
   //dynamically generate URL of website hosted in s3 bucket (generate output)
-  const websiteUrl = `https://${bucket}.s3.${bucketRegion}.amazonaws.com`;
+  const websiteUrl = `http://${bucket}.s3-website-${bucketRegion}.amazonaws.com`;
   core.setOutput("website-url", websiteUrl); //output to be used in other steps of the workflow
 }
 run();
