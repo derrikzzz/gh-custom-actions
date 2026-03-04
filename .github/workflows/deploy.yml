@@ -81,9 +81,9 @@ jobs:
       - name: Get AWS permissions
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/role-name #dummy role
+          role-to-assume: arn:aws:iam::343218182998:role/github-actions-deploy-role
           aws-region: us-east-1
-          
+
       - name: Deploy site
         id: deploy
         uses: ./.github/actions/deploy-s3-javascript
@@ -94,8 +94,7 @@ jobs:
           bucket: gha-custom-action-hosting
           dist-folder: ./dist
       - name: Output information
-        run:
-          echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
+        run: echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
 
   # information:
   #   runs-on: ubuntu-latest
