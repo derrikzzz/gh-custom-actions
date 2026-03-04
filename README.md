@@ -1,6 +1,8 @@
 
 # Github Actions CI/CD Pipeline Documentation
 
+![Deploy](https://github.com/derrikzzz/gh-custom-actions/actions/workflows/deploy.yml/badge.svg)
+
 A brief description of what this project does and who it's for
 
 This repository uses Github Actions for automated linting, testing, building and deployment
@@ -46,12 +48,12 @@ gh-custom-actions/
 ## Custom Actions
 
 ### 1. **`cached-deps`**
-Purpose: Installs and cache Node.js dependencies for workflow runs in the future, optimising CI/CD performance and avodiing redundant installs in the process
+Purpose: Installs and cache Node.js dependencies for workflow runs in the future, optimising CI/CD performance and avoiding redundant installs in the process
 
 ### 2. **`deploy-s3-javascript`**
 Purpose: Defines a javascript-based custom Github Action for deploying a static website to AWS S3 bucket
 
-### 3. **`deply-s3-docker`**
+### 3. **`deploy-s3-docker`**
 Purpose: Defines a Docker-based custom Github Action for deploying a static website to AWS S3 bucket using a Docker container
 
 ### 4. **`workflows/deploy.yml`**
