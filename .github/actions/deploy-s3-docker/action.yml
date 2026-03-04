@@ -14,10 +14,10 @@ inputs:
   dist-folder: #path to the folder that contains the files that should be uplaoded to bucket
     description: 'The folder containing the deployable file'
     required: true
-  
-  outputs:
-    website-url: 
-      description: 'The URL of the deployed website'
+
+outputs:
+  website-url:
+    description: 'The URL of the deployed website'
 #the syntax is the same for docker and javascript actions (in the context of the action.yml file and registering inputs and outputs)
 # the difference is in how we access those inputs in the code executed in container and how we set outputs
 
