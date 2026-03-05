@@ -62,11 +62,43 @@ jobs:
         with:
           name: dist-files
           path: dist
-  deploy:
+  deploy-staging:
+    environment: production
     permissions:
       id-token: write
       contents: read
     needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Get build artifcats
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: ./dist
+      - name: Get AWS permissions
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::343218182998:role/github-actions-deploy-role-staging
+          aws-region: us-east-1
+      - name: Deploy site to staging
+        id: deploy
+        uses: ./.github/actions/deploy-s3-docker
+        with:
+          bucket: gha-custom-action-hosting-staging-343218182998
+          dist-folder: ./dist
+      - name: Output information
+        run: echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
+
+  deploy-prod:
+    #this triggers the approval gate
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    # only runs after staging succeeds (dependent on staging)
+    needs: deploy-staging
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -76,26 +108,19 @@ jobs:
         with:
           name: dist-files
           path: ./dist
-      - name: Output contents
-        run: ls
       - name: Get AWS permissions
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::343218182998:role/github-actions-deploy-role
           aws-region: us-east-1
-
-      - name: Deploy site
+      - name: Deploy site to prod
         id: deploy
         uses: ./.github/actions/deploy-s3-docker
-        # env:
-        #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           bucket: gha-custom-action-hosting-343218182998
           dist-folder: ./dist
       - name: Output information
         run: echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
-
   # information:
   #   runs-on: ubuntu-latest
   #   steps:
