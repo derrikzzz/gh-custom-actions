@@ -63,7 +63,7 @@ jobs:
           name: dist-files
           path: dist
   deploy-staging:
-    environment: production
+    environment: staging
     permissions:
       id-token: write
       contents: read
