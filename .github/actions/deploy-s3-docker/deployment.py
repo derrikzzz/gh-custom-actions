@@ -1,4 +1,5 @@
 import os
+import mimetypes
 import boto3
 from botocore.config import Config
 
@@ -13,7 +14,13 @@ def deploy_s3_docker():
     
     for root, subdirs, files in os.walk(dist_folder):
         for file in files:
-            s3_client.upload_file(os.path.join(root, file), bucket, file)
+            mime_type, _ = mimetypes.guess_type(file)
+            s3_client.upload_file(
+                os.path.join(root, file),
+                bucket,
+                file,
+                ExtraArgs={"ContentType": mime_type or "application/octet-stream"}
+            )
             
     website_url = f'http://{bucket}.s3-website-{bucket_region}.amazonaws.com'
     with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
