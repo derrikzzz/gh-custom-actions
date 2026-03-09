@@ -15,10 +15,11 @@ def deploy_s3_docker():
     for root, subdirs, files in os.walk(dist_folder):
         for file in files:
             mime_type, _ = mimetypes.guess_type(file)
+            s3_key = os.path.relpath(os.path.join(root, file), dist_folder)
             s3_client.upload_file(
                 os.path.join(root, file),
                 bucket,
-                file,
+                s3_key,
                 ExtraArgs={"ContentType": mime_type or "application/octet-stream"}
             )
             
