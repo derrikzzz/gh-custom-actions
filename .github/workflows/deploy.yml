@@ -126,11 +126,11 @@ jobs:
           dist-folder: ./dist
       - name: Output information
         run: echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
-      # - name: Invalidate CloudFront cache
-      #   run: |
-      #     aws cloudfront create-invalidation \
-      #       --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
-      #       --paths "/*"
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
+            --paths "/*"
   # information:
   #   runs-on: ubuntu-latest
   #   steps:
