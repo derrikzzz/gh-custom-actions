@@ -10,8 +10,13 @@ function MainContent() {
   }
 
   return (
-    <main>
-      <button onClick={toggleHelp}>{helpVisible ? 'Hide' : 'Show'} Help</button>
+    <main className="my-8 mx-auto p-8 max-w-[50rem] bg-[#292d2d] rounded-lg text-white">
+      <button
+        onClick={toggleHelp}
+        className="cursor-pointer bg-black text-white py-1 px-4 rounded border border-black font-[inherit]"
+      >
+        {helpVisible ? 'Hide' : 'Show'} Help
+      </button>
       {helpVisible && <HelpArea />}
     </main>
   );
