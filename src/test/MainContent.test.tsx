@@ -11,13 +11,13 @@ describe("MainContent", () => {
   it("should render a button", () => {
     render(<MainContent />);
 
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getAllByRole("button").length).toBeGreaterThan(0);
   });
 
   it("should show the help area after clicking the button", async () => {
     render(<MainContent />);
 
-    const button = screen.getByRole("button");
+    const button = screen.getByRole("button", { name: /show help/i });
     await userEvent.click(button);
     expect(screen.getByTestId("help-area")).toBeInTheDocument();
   });

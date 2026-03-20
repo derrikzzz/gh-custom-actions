@@ -4,7 +4,88 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>GitHub Actions CI/CD Learning Project</title>
+
+    <!-- ============================================================
+         SEO: Meta Tags
+         - description: shown as the snippet text in Google results
+         - robots: tell crawlers to index this page and follow links
+         - canonical: the "official" URL to prevent duplicate content
+         ============================================================ -->
+    <meta name="description" content="Learn GitHub Actions CI/CD with a React app — covering custom actions, S3 deployment, testing, and caching." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://gh-custom-actions.s3-website.amazonaws.com/" />
+
+    <!-- ============================================================
+         SEO: Open Graph (og:)
+         Controls how the page appears when shared on Facebook,
+         LinkedIn, Slack, and other platforms that read og: tags.
+         ============================================================ -->
+    <meta property="og:title" content="GitHub Actions CI/CD Learning Project" />
+    <meta property="og:description" content="Hands-on project for learning GitHub Actions, custom actions, and AWS S3 deployment." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gh-custom-actions.s3-website.amazonaws.com/" />
+
+    <!-- ============================================================
+         SEO: Twitter Card
+         Controls how the page appears when shared on Twitter/X.
+         "summary" shows title + description + small image.
+         ============================================================ -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GitHub Actions CI/CD Learning Project" />
+    <meta name="twitter:description" content="Hands-on project for learning GitHub Actions, custom actions, and AWS S3 deployment." />
+
+    <!-- ============================================================
+         SEO: Structured Data — JSON-LD
+         Machine-readable data embedded in the page.
+         Search engines use this to show "rich results" (e.g. FAQ
+         dropdowns directly in Google search results).
+
+         Schema 1: WebSite — identifies this page as a website entity.
+         Schema 2: FAQPage — maps to the HelpBox content rendered by
+                   HelpArea.tsx, enabling FAQ rich results on Google.
+         ============================================================ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "GitHub Actions CI/CD Learning Project",
+      "url": "https://gh-custom-actions.s3-website.amazonaws.com/"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Git?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Git is a distributed version control system that tracks changes in source code during software development."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is GitHub?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GitHub is a cloud platform for hosting Git repositories and collaborating on code with pull requests, issues, and reviews."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is GitHub Actions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GitHub Actions is a CI/CD platform built into GitHub that automates build, test, and deployment workflows triggered by repository events."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

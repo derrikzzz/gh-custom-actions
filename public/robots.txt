@@ -1,0 +1,14 @@
+# robots.txt — tells search engine crawlers which pages to index.
+#
+# "User-agent: *" applies the rules to ALL crawlers (Googlebot, Bingbot, etc.)
+# "Allow: /" permits crawling the entire site.
+# "Disallow:" lines would block specific paths, e.g:
+#   Disallow: /admin/
+#
+# The Sitemap line tells crawlers where to find the sitemap,
+# so they can discover all URLs without having to follow links.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://gh-custom-actions.s3-website.amazonaws.com/sitemap.xml
