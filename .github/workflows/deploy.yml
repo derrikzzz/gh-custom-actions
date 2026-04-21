@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Load and Cache dependencies
         id: cache-deps
         uses: ./.github/actions/cached-deps
@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache dependencies
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
@@ -36,7 +36,7 @@ jobs:
         run: npm run test
       - name: Upload test report
         if: failure() && steps.run-tests.outcome == 'failure'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: test.json
@@ -45,10 +45,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache dependencies
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
@@ -58,11 +58,12 @@ jobs:
       - name: Build website
         run: npm run build
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-files
           path: dist
-  deploy:
+  deploy-staging:
+    environment: staging
     permissions:
       id-token: write
       contents: read
@@ -70,42 +71,71 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
-      - name: Get build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/checkout@v4
+      - name: Get build artifcats
+        uses: actions/download-artifact@v4
         with:
           name: dist-files
           path: ./dist
-      - name: Output contents
-        run: ls
       - name: Get AWS permissions
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/role-name #dummy role
+          role-to-assume: arn:aws:iam::343218182998:role/github-actions-deploy-role-staging
           aws-region: us-east-1
-          
-      - name: Deploy site
+      - name: Deploy site to staging
         id: deploy
-        uses: ./github/actions/deploy-s3-javascript
-        env: 
-          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        with: #provide input values, the values for bucket and dist-folder are required
-        #need to generate access key ID and secret access key in AWS IAM to authenticate command to AWS
-        #these keys here would grant us unlimited access, a bit more access that we want to grant
-
-        
-          bucket: gha-custom-action-hosting
+        uses: ./.github/actions/deploy-s3-docker
+        with:
+          bucket: gha-custom-action-hosting-staging-343218182998
           dist-folder: ./dist
       - name: Output information
-        run:
-          echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
+        run: echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGING }} \
+          --paths "/*"
 
+  deploy-prod:
+    #this triggers the approval gate
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    # only runs after staging succeeds (dependent on staging)
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Get build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: ./dist
+      - name: Get AWS permissions
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::343218182998:role/github-actions-deploy-role
+          aws-region: us-east-1
+      - name: Deploy site to prod
+        id: deploy
+        uses: ./.github/actions/deploy-s3-docker
+        with:
+          bucket: gha-custom-action-hosting-343218182998
+          dist-folder: ./dist
+      - name: Output information
+        run: echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
+            --paths "/*"
   # information:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Get code
-  #       uses: actions/checkout@v3
+  #       uses: actions/checkout@v4
   #     - name: Run custom action
   #       uses: ./.github/actions/deploy-s3-javascript #local action stored in repository, need to check out code first
   #       # need to check out code before using a custom action stored in repository

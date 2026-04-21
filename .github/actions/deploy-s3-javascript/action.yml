@@ -14,12 +14,12 @@ inputs:
     description: 'The folder containing the deployable file'
     required: true
 
-  outputs:
-    website-url: 
-      description: 'The URL of the deployed website'
+outputs:
+  website-url:
+    description: 'The URL of the deployed website'
 
 
 runs:
-  using: 'node16' # tells github that this is a js custom action, using node runtime
+  using: 'node20' # tells github that this is a js custom action, using node runtime
   main: 'main.js'
   # might need to perform pre and post steps to deploy the website (setup and cleanup)

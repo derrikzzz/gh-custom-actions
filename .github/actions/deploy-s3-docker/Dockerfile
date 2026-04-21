@@ -1,5 +1,9 @@
-From python:3
+FROM python:3.12
 #creates an environment, create container based on python based image (python version 3)
-COPY requiremenets.txt /requirements.txt
+COPY requirements.txt /requirements.txt
 
 RUN pip install -r /requirements.txt
+
+COPY deployment.py /deployment.py
+
+ENTRYPOINT ["python", "/deployment.py"]

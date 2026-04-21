@@ -1,27 +1,27 @@
-name: 'Get & Cache Dependencies'
-description: 'Get dependencies (via npm) and cache them for future runs'
+name: "Get & Cache Dependencies"
+description: "Get dependencies (via npm) and cache them for future runs"
 
-inputs: 
+inputs:
   caching:
-    description: 'Whether to cache dependencies or not.'
+    description: "Whether to cache dependencies or not."
     required: false
-    default: 'true'
+    default: "true"
 
-outputs: 
+outputs:
   used-cache:
-    description: 'Whether the cache was used or not.'
+    description: "Whether the cache was used or not."
     value: ${{ steps.install.outputs.cache }}
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Cache dependencies
-        if: inputs.caching == 'true' 
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      if: inputs.caching == 'true'
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install dependencies
       id: install
       if: steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'true'
@@ -29,7 +29,7 @@ runs:
       #The caching input is not set to true (inputs.caching != 'true').
       run: |
         npm ci
-        echo "cache='${{ inputs.caching }}'">>$GITHUB_OUTPUT 
+        echo "cache='${{ inputs.caching }}'">>$GITHUB_OUTPUT
       # value will be provided for the used cache output
       # This will output the value of the caching input to the $GITHUB_OUTPUT file.
       shell: bash
