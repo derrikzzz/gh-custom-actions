@@ -96,8 +96,8 @@ After running all tests, Vitest generates a JSON report saved to `test.json`:
 
 ```json
 {
-  "numTotalTestSuites": 2,
-  "numPassedTestSuites": 2,
+  "numTotalTestSuites": 1,
+  "numPassedTestSuites": 1,
   "numFailedTestSuites": 0,
   "numTotalTests": 2,
   "numPassedTests": 2,
